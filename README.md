@@ -6,4 +6,4 @@ docker network create pbrowngh
 
 docker-compose -f docker-compose.yml up -d configserver discoveryserver sampleserver
 
-docker logs -f <sample-server-container-id>
+docker logs -f _sample-server-container-id_
