@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="DEBUG" monitorInterval="5">
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} traceId=%X{traceId} spanId=%X{spanId} %magenta{[%-15.20t]} %highlight{%-5p} %blue{%-20c{1.}} : %highlight{%m}%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingRandomAccessFile name="RollingRandomAccessFile"
+            fileName="/var/log/sample/sample-${prefix:hostName}.log"
+            filePattern="/var/log/sample/sample-${prefix:hostName}-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} traceId=%X{traceId} spanId=%X{spanId} [%-15.20t] %-5p %-20c{1.} : %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!-- 100MB limit before log file is rolled over -->
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+            <!-- Max 20 log files created by rollover -->
+            <DefaultRolloverStrategy max="20" />
+        </RollingRandomAccessFile>
+
+        <!-- Comment out this appender, and the LoggerContext will shutdown properly -->
+        <Async name="ASYNC">
+            <AppenderRef ref="RollingRandomAccessFile" />
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.pbrowngh" level="INFO" additivity="false">
+            <AppenderRef ref="STDOUT" level="INFO" />
+            <!--            <AppenderRef ref="ASYNC" />-->
+        </Logger>
+        <Root level="WARN">
+            <AppenderRef ref="STDOUT" level="INFO" />
+            <!--            <AppenderRef ref="ASYNC" />-->
+        </Root>
+    </Loggers>
+</Configuration>

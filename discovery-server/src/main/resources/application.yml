@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: discoveryserver
+server:
+  port: 8761
+eureka:
+  instance:
+    hostname: localhost
+    preferIpAddress: true
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://fakeUsername:fakePassword@discoveryserver:8761/eureka/
+    server:
+      waitTimeInMsWhenSyncEmpty: 0
+security:
+  user:
+    name: fakeUsername
+    password: fakePassword
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+health:
+  config:
+    enabled: false

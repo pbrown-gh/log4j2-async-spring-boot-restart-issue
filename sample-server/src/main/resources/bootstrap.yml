@@ -1,0 +1,33 @@
+---
+spring:
+  application:
+    name: sample-server
+  cloud:
+    config:
+      enabled: true
+      failFast: true
+      retry:
+        initial-interval: 1000
+        multiplier: 1.1
+        max-attempts: 6
+        max-interval: 2000
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      uri: http://${config.host:localhost}:${config.port:8888}
+      username: fakeUsername
+      password: fakePassword
+
+eureka:
+  instance:
+    preferIpAddress: true
+    nonSecurePort: ${server.port:8087}
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}
+  client:
+    serviceUrl:
+      defaultZone: http://fakeUsername:fakePassword@discoveryserver:8761/eureka/
+
+logging:
+  level:
+    org:
+      springframework: DEBUG

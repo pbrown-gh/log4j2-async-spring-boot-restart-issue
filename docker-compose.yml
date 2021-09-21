@@ -1,0 +1,41 @@
+version: "2.1"
+
+services:
+
+  configserver:
+    image: "pbrowngh/config-server:latest"
+    restart: always
+    container_name: configserver
+    depends_on:
+      - discoveryserver
+    environment:
+      SPRING_CLOUD_CONFIG_LABEL: master
+
+  discoveryserver:
+    image: "pbrowngh/discovery-server:latest"
+    restart: always
+    container_name: discoveryserver
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_URL: "http://fakeUsername:fakePassword@discoveryserver:8761/eureka/"
+
+  sampleserver:
+    image: "pbrowngh/sample-server:latest"
+    restart: always
+    container_name: sampleserver
+    depends_on:
+      - configserver
+      - discoveryserver
+    volumes:
+      - /var/log/sample:/var/log/sample/
+    environment:
+      SPRING_CLOUD_CONFIG_LABEL: master
+    ports:
+        - "8086:8086"
+        - "5701:5701"
+
+networks:
+  default:
+    external:
+      name: pbrowngh
